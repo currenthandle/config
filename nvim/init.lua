@@ -1,5 +1,4 @@
 require'prettierd'
---require'prettier'
 
 --[[
 
@@ -430,6 +429,14 @@ local on_attach = function(_, bufnr)
   vim.api.nvim_buf_create_user_command(bufnr, 'Format', function(_)
     vim.lsp.buf.format()
   end, { desc = 'Format current buffer with LSP' })
+
+  -- vim.cmd("autocmd BufWritePre <buffer> lua vim.lsp.buf.format()")
+  vim.api.nvim_create_autocmd("BufWritePre", {
+    pattern = '*.rs',
+    callback = function()
+      vim.lsp.buf.format()
+    end,
+  })
 
   -- vim.lsp.buf.format({
   --  formatter = "prettierd",
