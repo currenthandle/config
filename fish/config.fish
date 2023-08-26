@@ -29,8 +29,7 @@ fish_vi_key_bindings
 # Add paths to PATH
 set -U fish_user_paths /Users/casey/.foundry/bin $fish_user_paths
 set -U fish_user_paths /Users/casey/.cargo/bin $fish_user_paths
-set -U fish_user_paths /Users/casey/.local/bin $fish_user_paths
-set -U fish_user_paths /usr/local/opt/llvm/bin $fish_user_paths
+set -U fish_user_paths /Users/casey/.local/bin $fish_user_paths set -U fish_user_paths /usr/local/opt/llvm/bin $fish_user_paths
 
 set -gx PATH /usr/local/mysql-shell/bin $PATH
 
@@ -129,6 +128,9 @@ alias gb "git branch"
 alias gaa "git add ."
 alias gcm "git commit -m"
 alias gst "git status"
+
+alias t "tmux"
+alias tks "tmux kill-server"
 
 function ghis
     if not set -q argv[1]
