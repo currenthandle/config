@@ -3,6 +3,8 @@ vim.cmd("set tabstop=2")
 vim.cmd("set softtabstop=2")
 vim.cmd("set shiftwidth=2")
 vim.g.mapleader = " "
+vim.keymap.set('i', 'jj', '<ESC>')
+vim.keymap.set('i', 'kk', '<ESC>')
 
 --[[ -- Navigate vim panes better
 vim.keymap.set('n', '<c-k>', ':wincmd k<CR>')
