@@ -20,7 +20,8 @@ return {
 						"--with-filename",
 						"--line-number",
 						"--column",
-						"--smart-case",
+						-- "--smart-case",
+            "--case-sensitive",
 						"-uu", -- **This is the setting not being respected**
 					},
 				},

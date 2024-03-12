@@ -51,7 +51,7 @@ return {
 			lspconfig.taplo.setup({
 				capabilities = capabilities,
 			})
-			lspconfig.emmet_ls.setup({
+			lspconfig.emmet_language_server.setup({
 				capabilities = capabilities,
 				filetypes = {
 					"html",
@@ -64,6 +64,19 @@ return {
 					"tsx",
 				},
 			})
+			-- lspconfig.emmet_ls.setup({
+			-- 	capabilities = capabilities,
+			-- 	filetypes = {
+			-- 		"html",
+			-- 		"css",
+			-- 		"javascriptreact",
+			-- 		"typescriptreact",
+			-- 		"javascript",
+			-- 		"typescript",
+			-- 		"jsx",
+			-- 		"tsx",
+			-- 	},
+			-- })
 
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})
 			vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
