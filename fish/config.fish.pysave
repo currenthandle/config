@@ -1,0 +1,248 @@
+# if status is-interactive
+#     # Commands to run in interactive sessions can go here
+#     fish_vi_key_bindings
+# end
+# fish_vi_key_bindings
+
+# export PATH="$PATH:/Users/casey/.foundry/bin:$PATH:/Users/casey/.cargo/bin"
+
+# # pnpm
+# set -gx PNPM_HOME "/Users/casey/Library/pnpm"
+# set -gx PATH "$PNPM_HOME" $PATH
+# # pnpm end
+# set -x PATH "/usr/local/opt/ruby@2.7/bin" $PATH
+
+# if test -x (command -v rbenv)
+#     eval (rbenv init - | source)
+# end
+
+# set -gx PATH /usr/local/opt/llvm/bin $PATH
+
+
+# if status is-interactive
+#     # Commands to run in interactive sessions can go here
+#     fish_vi_key_bindings
+# end
+
+fish_vi_key_bindings
+
+# Add paths to PATH
+# set -U fish_user_paths /Users/casey/.foundry/bin $fish_user_paths
+# set -U fish_user_paths /Users/casey/.cargo/bin $fish_user_paths
+# set -U fish_user_paths /Users/casey/.local/bin $fish_user_paths 
+# set -U fish_user_paths /usr/local/opt/llvm/bin $fish_user_paths
+# set -U fish_user_paths /opt/homebrew/bin $fish_user_paths
+
+
+
+set -U fish_user_paths /opt/homebrew/bin $fish_user_paths
+set -U fish_user_paths /Users/casey/.foundry/bin $fish_user_paths
+set -U fish_user_paths /Users/casey/.cargo/bin $fish_user_paths
+set -U fish_user_paths /Users/casey/.local/bin $fish_user_paths 
+set -U fish_user_paths /usr/local/opt/llvm/bin $fish_user_paths
+
+
+set -gx PATH /usr/local/mysql-shell/bin $PATH
+
+# android
+set -gx PATH $PATH ~/Library/Android/sdk/platform-tools ~/Library/Android/sdk/tools
+
+set -gx ANDROID_HOME ~/Library/Android/sdk
+set -gx PATH $ANDROID_HOME/emulator $PATH
+set -gx PATH $ANDROID_HOME/tools $PATH
+set -gx PATH $ANDROID_HOME/tools/bin $PATH
+set -gx PATH $ANDROID_HOME/platform-tools $PATH
+
+
+
+# python
+# set -gx PATH /usr/local/opt/python@3.11/bin $PATH
+# set -gx PATH "/usr/local/opt/python@3.11/bin" $PATH
+# set -gx PATH "$PYENV_ROOT/shims" $PATH
+
+
+set -gx PNPM_HOME "/Users/casey/Library/pnpm"
+set -U fish_user_paths $PNPM_HOME $fish_user_paths
+
+# ruby
+set -U fish_user_paths /usr/local/opt/ruby@2.7/bin $fish_user_paths
+
+if test -x (command -v rbenv)
+    eval (rbenv init - | source)
+end
+
+
+function fish_prompt
+    # Determine the Git branch or short commit hash
+    set -l git_info
+    if command git rev-parse --is-inside-work-tree >/dev/null 2>&1
+        # Get branch name or fall back to the short commit hash if in detached HEAD
+        set git_info (git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
+
+        # Determine whether we're in detached HEAD state
+        if git symbolic-ref --short HEAD >/dev/null 2>&1
+            set git_info (set_color green)$git_info(set_color normal)
+        else
+            set git_info (set_color red)$git_info(set_color normal)
+        end
+    end
+
+    # Construct the prompt
+    echo -n (prompt_pwd)
+
+    # If in a Git repo, display the branch name or short commit hash
+    if test -n "$git_info"
+        echo -n " ($git_info)"
+    end
+
+    echo -n '> '
+end
+
+function ce
+    if set -q argv[1]
+        cd ~/Dev/ezkl-work/$argv[1]
+    else
+        cd ~/Dev/ezkl-work
+    end
+end
+
+
+# alias
+alias vim "nvim"
+alias vi "nvim"
+# alias ce "cd ~/Dev/ezkl-work"
+alias vfc "vi ~/.config/fish/config.fish"
+alias vvc "vi ~/.config/nvim/init.lua"
+alias vtc "vi ~/.tmux.conf"
+alias ls "ls -1tr"
+
+alias sfc "source ~/.config/fish/config.fish"
+
+alias cat "ccat"
+
+# Git Aliases
+alias g "git"
+alias gco "git checkout"
+alias gcb "git checkout -b"
+alias gb "git branch"
+alias gaa "git add ."
+alias gcm "git commit -m"
+alias gst "git status"
+
+alias ghcs "gh copilot suggest"
+alias ghce "gh copilot explain"
+
+alias t "tmux"
+alias tks "tmux kill-server"
+alias python="python3"
+
+function ghis
+    if not set -q argv[1]
+        echo "Please provide a search term."
+        return 1
+    end
+
+    history search --contains $argv[1]
+end
+
+function cf
+    cat $argv | pbcopy
+end
+
+function pf
+    pbpaste > $argv
+end
+
+# function cd
+#     # If no arguments are provided, just switch to the home directory.
+#     if not set -q argv[1]
+#         builtin cd
+#         return
+#     end
+#
+#     set -l dir $argv[1]
+#
+#     # If the argument consists solely of dots...
+#     if string match -qr '^\.\+$' -- $dir
+#         # Count the number of dots minus one
+#         set -l num_dots (string length -q -- $dir)
+#         set -l num_up_dirs (math "$num_dots - 1")
+#
+#         # Construct the path
+#         set -l path_string ""
+#         for i in (seq $num_up_dirs)
+#             set path_string "$path_string../"
+#         end
+#
+#         # Change to the path
+#         builtin cd $path_string
+#     else
+#         # If not solely dots, just pass the argument to the original cd command
+#         builtin cd $argv
+#     end
+# end
+
+# bun
+set --export BUN_INSTALL "$HOME/.bun"
+set --export PATH $BUN_INSTALL/bin $PATH
+
+# Setting PATH for Python 3.11
+# The original version is saved in /Users/casey/.config/fish/config.fish.pysave
+set -x PATH "/Library/Frameworks/Python.framework/Versions/3.11/bin" "$PATH"
+
+
+# Add LLVM's bin directory to your PATH
+#set -U fish_user_paths /opt/homebrew/opt/llvm/bin $fish_user_paths
+# ---> CHAT GPT ADDED
+# Set LIBCLANG_PATH for bindgen
+#set -gx LIBCLANG_PATH /opt/homebrew/opt/llvm/lib
+# Set LDFLAGS for linking
+#set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+# Set CPPFLAGS for including headers
+#set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+# ---> CHAT GPT ADDED
+
+set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+
+fish_add_path /opt/homebrew/opt/llvm/bin
+
+set -gx LDFLAGS "-L/opt/homebrew/opt/libpq/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/libpq/include"
+
+set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig"
+
+set -gx ARCHON_SERVER_URL "https://archon.ezkl.xyz"
+
+# Setting PATH for Python 3.12
+# The original version is saved in /Users/casey/.config/fish/config.fish.pysave
+set -x PATH "/Library/Frameworks/Python.framework/Versions/3.12/bin" "$PATH"
+
+set -x ARCHON_SERVER_URL "https://archon-v0.ezkl.xyz"
+#
+# set -gx LDFLAGS "-L/usr/local/opt/openssl@3/lib -L/usr/local/opt/readline/lib -L/usr/local/opt/zlib/lib -L/usr/local/opt/sqlite/lib"
+# set -gx CPPFLAGS "-I/usr/local/opt/openssl@3/include -I/usr/local/opt/readline/include -I/usr/local/opt/zlib/include -I/usr/local/opt/sqlite/include"
+# set -gx PKG_CONFIG_PATH "/usr/local/opt/openssl@3/lib/pkgconfig /usr/local/opt/readline/lib/pkgconfig /usr/local/opt/zlib/lib/pkgconfig /usr/local/opt/sqlite/lib/pkgconfig"
+# set -gx LDFLAGS "-L/opt/homebrew/opt/zlib/lib $LDFLAGS"
+# set -gx CPPFLAGS "-I/opt/homebrew/opt/zlib/include $CPPFLAGS"
+# set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/zlib/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+
+# "$(pyenv init --path)"
+eval (pyenv init --path)
+# set -gx PATH (fish_unique_path $PATH)
+# set -gx PATH (string join : (echo $PATH | tr ' ' '\n' | sort -u))
+# set -gx PATH (string join : (echo $PATH | tr ' ' '\n' | awk '!x[$0]++'))
+
+
+
+
+
+# Setting PATH for Python 3.12
+# The original version is saved in /Users/casey/.config/fish/config.fish.pysave
+set -x PATH "/Library/Frameworks/Python.framework/Versions/3.12/bin" "$PATH"
+
+# Setting PATH for Python 3.11
+# The original version is saved in /Users/casey/.config/fish/config.fish.pysave
+set -x PATH "/Library/Frameworks/Python.framework/Versions/3.11/bin" "$PATH"
+

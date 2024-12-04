@@ -35,4 +35,4 @@ SETUVAR fish_pager_color_description:B3A06D\x1eyellow\x1e\x2di
 SETUVAR fish_pager_color_prefix:normal\x1e\x2d\x2dbold\x1e\x2d\x2dunderline
 SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbackground\x3dcyan
 SETUVAR fish_pager_color_selected_background:\x2dr
-SETUVAR fish_user_paths:/usr/local/opt/llvm/bin\x1e/usr/local/opt/ruby\x402\x2e7/bin\x1e/Users/casey/Library/pnpm\x1e/Users/casey/\x2elocal/bin\x1e/Users/casey/\x2ecargo/bin\x1e/Users/casey/\x2efoundry/bin\x1eset\x1e\x2dU\x1efish_user_paths
+SETUVAR fish_user_paths:/Users/casey/\x2epyenv/shims\x1e/opt/homebrew/opt/llvm/bin\x1e/Users/casey/\x2ebun/bin\x1e/Users/casey/Library/Android/sdk/platform\x2dtools\x1e/Users/casey/Library/Android/sdk/tools\x1e/Users/casey/Library/Android/sdk/tools/bin\x1e/Users/casey/Library/Android/sdk/emulator\x1e/Users/casey/\x2eezkl\x1e/Users/casey/\x2earchon\x1e/opt/homebrew/bin\x1e/Users/casey/\x2efoundry/bin\x1e/Users/casey/\x2ecargo/bin\x1e/Users/casey/\x2elocal/bin\x1e/Users/casey/Library/pnpm\x1e/usr/local/opt/ruby\x402\x2e7/bin\x1e/path/to/stripe/binary
