@@ -1,5 +1,32 @@
 # ============================================================
-# ENVIRONMENT VARIABLE LOADING
+# BASIC SETTINGS
+# ============================================================
+
+# Enable Vi key bindings for Fish
+fish_vi_key_bindings
+
+# Set universal paths
+set -U fish_user_paths /opt/homebrew/bin \
+                       /Users/casey/.foundry/bin \
+                       /Users/casey/.cargo/bin \
+                       /Users/casey/.local/bin \
+                       /Users/casey/Library/pnpm \
+                       /usr/local/opt/ruby@2.7/bin
+
+# Add Bun
+set --export BUN_INSTALL "$HOME/.bun"
+fish_add_path $BUN_INSTALL/bin
+
+# Node.js Package Manager
+set -gx PNPM_HOME "/Users/casey/Library/pnpm"
+fish_add_path $PNPM_HOME
+
+# Android SDK Paths
+set -gx ANDROID_HOME ~/Library/Android/sdk
+fish_add_path $ANDROID_HOME/platform-tools $ANDROID_HOME/tools $ANDROID_HOME/tools/bin $ANDROID_HOME/emulator
+
+# ============================================================
+# ENVIRONMENT VARIABLES
 # ============================================================
 
 # Load .env file if it exists
@@ -15,58 +42,39 @@ if test -f .env
     end
 end
 
-# ============================================================
-# ENVIRONMENT VARIABLES (MANUAL)
-# ============================================================
-
-# Set URLs and API keys for external services.
+# Set URLs and API keys for external services
 set -gx ARCHON_SERVER_URL "https://archon-v0.ezkl.xyz"
 
 # ============================================================
-# GENERAL SETTINGS
+# COMPILER SETTINGS
 # ============================================================
 
-# Enable Vi mode for Fish shell (allows Vi-style key bindings in the terminal)
-fish_vi_key_bindings
+set -gx CC /opt/homebrew/opt/llvm/bin/clang
+set -gx CXX /opt/homebrew/opt/llvm/bin/clang++
+set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
+set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
+set -gx LD /opt/homebrew/opt/llvm/bin/lld
+set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig:$PKG_CONFIG_PATH"
+fish_add_path /opt/homebrew/opt/llvm/bin
 
 # ============================================================
-# PATH CONFIGURATION
+# PYENV CONFIGURATION
 # ============================================================
 
-# Universal Path Settings
-# Add commonly used directories to the universal path variable ($fish_user_paths).
-set -U fish_user_paths /opt/homebrew/bin \
-                       /Users/casey/.foundry/bin \
-                       /Users/casey/.cargo/bin \
-                       /Users/casey/.local/bin \
-                       /Users/casey/Library/pnpm \
-                       /usr/local/opt/ruby@2.7/bin \
-                       /path/to/stripe/binary
+set -gx PYENV_ROOT $HOME/.pyenv
+fish_add_path $PYENV_ROOT/bin
+fish_add_path $PYENV_ROOT/shims
 
-# Project-specific Paths
-# Add directories for EZKL and Archon projects
-fish_add_path /Users/casey/.ezkl /Users/casey/.archon
+if type -q pyenv
+    status --is-interactive; and source (pyenv init --path | psub)
+    status --is-interactive; and source (pyenv init - | psub)
+end
 
-# Android Development Paths
-# Set the Android SDK home directory and add related tools to the PATH.
-set -gx ANDROID_HOME ~/Library/Android/sdk
-fish_add_path $ANDROID_HOME/platform-tools \
-              $ANDROID_HOME/tools \
-              $ANDROID_HOME/tools/bin \
-              $ANDROID_HOME/emulator
+# ============================================================
+# CONDA CONFIGURATION
+# ============================================================
 
-# Node.js Package Manager (pnpm)
-# Add pnpm's installation directory to the PATH.
-set -gx PNPM_HOME "/Users/casey/Library/pnpm"
-fish_add_path $PNPM_HOME
-
-# Bun (JavaScript runtime)
-# Add Bun's installation directory to the PATH.
-set --export BUN_INSTALL "$HOME/.bun"
-fish_add_path $BUN_INSTALL/bin
-
-# Conda (Python environment management)
-# Initialize Conda if available.
+# Initialize Conda if available
 if test -f /opt/miniconda3/bin/conda
     eval /opt/miniconda3/bin/conda "shell.fish" "hook" $argv | source
 else if test -f "/opt/miniconda3/etc/fish/conf.d/conda.fish"
@@ -76,53 +84,10 @@ else
 end
 
 # ============================================================
-# COMPILER CONFIGURATION
-# ============================================================
-
-# Compiler Paths
-# Set the default C and C++ compilers to LLVM's Clang (installed via Homebrew).
-set -gx CC /opt/homebrew/opt/llvm/bin/clang
-set -gx CXX /opt/homebrew/opt/llvm/bin/clang++
-
-# Environment Variables for Compilation
-# Set linker flags (LDFLAGS), C preprocessor flags (CPPFLAGS), and specify the linker binary (LD).
-set -gx LDFLAGS "-L/opt/homebrew/opt/llvm/lib"
-set -gx CPPFLAGS "-I/opt/homebrew/opt/llvm/include"
-set -gx LD /opt/homebrew/opt/llvm/bin/lld
-
-# Add PostgreSQL's pkg-config path and preserve existing entries in $PKG_CONFIG_PATH.
-set -gx PKG_CONFIG_PATH "/opt/homebrew/opt/libpq/lib/pkgconfig:$PKG_CONFIG_PATH"
-
-# Add LLVM executables to PATH for easy access to LLVM tools like Clang and LLD.
-fish_add_path /opt/homebrew/opt/llvm/bin
-
-# ============================================================
-# PYTHON CONFIGURATION
-# ============================================================
-
-# Pyenv Initialization
-# Ensure pyenv and its virtualenv plugin are initialized.
-set -gx PYENV_ROOT $HOME/.pyenv
-fish_add_path $PYENV_ROOT/shims
-status --is-interactive; and source (pyenv init -|psub)
-status --is-interactive; and source (pyenv virtualenv-init -|psub)
-
-# Custom Function: `pip`
-# Use the pip command from an active virtual environment or fallback to pyenv's Python.
-function pip
-    if set -q VIRTUAL_ENV
-        $VIRTUAL_ENV/bin/python -m pip $argv
-    else
-        eval (pyenv which python) -m pip $argv
-    end
-end
-
-# ============================================================
-# CUSTOM FUNCTIONS
+# FUNCTIONS
 # ============================================================
 
 # Custom Prompt Function
-# Define a custom Fish shell prompt that includes the current Git branch (if applicable).
 function fish_prompt
     set -l git_info
     if command git rev-parse --is-inside-work-tree >/dev/null 2>&1
@@ -135,7 +100,11 @@ end
 # Custom Function: `ce`
 # Quickly change to a project directory under ~/Dev/ezkl-work.
 function ce
-    cd ~/Dev/ezkl-work/(commandline -p)
+    if set -q argv[1]
+        cd ~/Dev/ezkl-work/$argv[1]
+    else
+        cd ~/Dev/ezkl-work
+    end
 end
 
 # Custom Function: `cap`
@@ -146,6 +115,16 @@ function cap
         echo ""
         cat $file
         echo ""
+    end
+end
+
+# Custom Function: `pip`
+# Use the pip command from an active virtual environment or fallback to pyenv's Python.
+function pip
+    if set -q VIRTUAL_ENV
+        $VIRTUAL_ENV/bin/python -m pip $argv
+    else
+        eval (pyenv which python) -m pip $argv
     end
 end
 
@@ -197,10 +176,8 @@ set -xg ew ~/Dev/ezkl-work   # EZKL work directory
 # ============================================================
 
 # Rust Configuration Notes
-# Ensure necessary linker flags are added to Rust's `.cargo/config.toml`.
 # Uncomment and set these in `.cargo/config.toml`:
 # [target.x86_64-apple-darwin]
 # rustflags = ["-C", "link-arg=-fuse-ld=lld"]
 # [target.aarch64-apple-darwin]
 # rustflags = ["-C", "link-arg=-fuse-ld=/opt/homebrew/opt/llvm/bin/ld64.lld"]
-
