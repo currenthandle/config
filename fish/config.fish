@@ -94,8 +94,11 @@ function fish_prompt
         set git_info (git symbolic-ref --short HEAD 2>/dev/null || git rev-parse --short HEAD 2>/dev/null)
         set git_info (set_color green)$git_info(set_color normal)
     end
-    echo -n (prompt_pwd) (test -n "$git_info"; and echo -n " ($git_info)")'> '
+    echo -n (prompt_pwd)
+    test -n "$git_info"; and echo -n " ($git_info)"
+    echo -n '> '
 end
+
 
 # Custom Function: `ce`
 # Quickly change to a project directory under ~/Dev/ezkl-work.
